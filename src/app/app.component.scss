@@ -1,0 +1,24 @@
+.main{
+  color: white;
+  font-family: 'Inter';
+  padding: 80px;
+  h1{
+    font-size: 3rem;
+    width: fit-content;
+  }
+  p{
+    // font-family: "Satisfy", cursive;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  h1:hover{
+    background: #fa3c3c;
+    background-image: url('../assets/images/noise-light.png');
+  }
+}
+
+@media screen and (max-width:480px) {
+  .main{
+    padding:80px 40px;
+  }
+}
