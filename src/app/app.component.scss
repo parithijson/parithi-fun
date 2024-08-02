@@ -1,7 +1,9 @@
+@import '../styles.scss';
+
 .main{
   color: white;
   font-family: 'Inter';
-  padding: 80px;
+  padding: 20px 80px;
   h1{
     font-size: 3rem;
     width: fit-content;
@@ -16,9 +18,21 @@
     background-image: url('../assets/images/noise-light.png');
   }
 }
+nav{
+  display: flex;
+  justify-content: flex-end;
+}
 
 @media screen and (max-width:480px) {
   .main{
-    padding:80px 40px;
+    padding:20px 20px !important;
+  }
+  .theme-toggle-btn{
+    font-size: 16px !important;
+  }
+}
+@media screen and (max-width:720px) {
+  .main {
+    padding: 20px 40px !important;
   }
 }

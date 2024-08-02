@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Subject, debounceTime, throttleTime } from 'rxjs';
+import { ThemeService } from './theme.service';
 
 @Component({
   selector: 'app-root',
@@ -8,19 +9,20 @@ import { Subject, debounceTime, throttleTime } from 'rxjs';
 })
 export class AppComponent {
   title = 'Parithi';
-
   displayedText: string = 'cooking';
   private texts: string[] = ['cooking','crafting', 'prepping'];
   private currentIndex: number = 0;
   private lastTouchY: number = 0;
-    private accumulatedDistance: number = 0;
+  private accumulatedDistance: number = 0;
   private distanceThreshold: number = 30; // Change text every 30px of scroll
+  themeText = 'switch dark';
+
 
   // Create a Subject for debouncing
   private touchMoveSubject = new Subject<void>();
   private wheelSubject = new Subject<void>();
 
-  constructor() {
+  constructor(private themeService: ThemeService) {
     // Apply debounce for touch events (touch devices)
     this.touchMoveSubject.pipe(
       debounceTime(200) // Adjust debounce time for touch devices
@@ -35,6 +37,20 @@ export class AppComponent {
     ).subscribe(() => {
       this.changeText();
     });
+
+    this.themeService.theme$.subscribe(theme => {
+      this.updateThemeText(theme);
+    });
+
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+
+  private updateThemeText(theme: string): void {
+    this.themeText = theme === 'dark' ? 'switch normal' : 'switch dark';
   }
 
     ngOnInit() {
@@ -78,5 +94,9 @@ export class AppComponent {
   private changeText() {
     this.currentIndex = (this.currentIndex + 1) % this.texts.length;
     this.displayedText = this.texts[this.currentIndex];
+  }
+  enableDarkMode(){
+
+    localStorage.getItem('theme')
   }
 }
