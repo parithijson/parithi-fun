@@ -36,7 +36,8 @@ nav {
 }
 
 .main {
-  flex: 1;
+  // flex: 1;
+  // min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -44,9 +45,12 @@ nav {
 }
 
 footer {
-
+  // margin-top: auto;
+  position: absolute;
+  bottom: 0;
   padding: 10px 0;
-  flex-shrink: 0;
+  margin: 5s0px 0;
+  // flex-shrink: 0;
   /* Prevent the footer from shrinking */
 }
 
