@@ -9,10 +9,12 @@ import { Subject, debounceTime, throttleTime } from 'rxjs';
 export class AppComponent {
   title = 'Parithi';
 
-    displayedText: string = 'cooking';
+  displayedText: string = 'cooking';
   private texts: string[] = ['cooking','crafting', 'prepping'];
- private currentIndex: number = 0;
+  private currentIndex: number = 0;
   private lastTouchY: number = 0;
+    private accumulatedDistance: number = 0;
+  private distanceThreshold: number = 30; // Change text every 30px of scroll
 
   // Create a Subject for debouncing
   private touchMoveSubject = new Subject<void>();
@@ -51,14 +53,22 @@ export class AppComponent {
 
   onTouchStart(event: TouchEvent) {
     this.lastTouchY = event.touches[0].clientY;
+    this.accumulatedDistance = 0; // Reset accumulated distance on a new touch start
   }
 
   onTouchMove(event: TouchEvent) {
     const currentTouchY = event.touches[0].clientY;
-    if (Math.abs(currentTouchY - this.lastTouchY) > 10) { // Change threshold as needed
-      this.touchMoveSubject.next(); // Trigger debounce for touch
-    }
+    const movement = currentTouchY - this.lastTouchY;
+
+    // Update accumulated distance
+    this.accumulatedDistance += Math.abs(movement);
     this.lastTouchY = currentTouchY; // Update last touch position
+
+    // Check if accumulated distance exceeds the threshold
+    if (this.accumulatedDistance > this.distanceThreshold) {
+      this.changeText();
+      this.accumulatedDistance = 0; // Reset accumulated distance after a text change
+    }
   }
 
   onWheel(event: WheelEvent) {
