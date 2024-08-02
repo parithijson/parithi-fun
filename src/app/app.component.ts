@@ -10,18 +10,25 @@ import { ThemeService } from './theme.service';
 export class AppComponent {
   title = 'Parithi';
   displayedText: string = 'cooking';
-  private texts: string[] = ['cooking','crafting', 'prepping'];
+  private lightModeTexts: string[] = ['cooking','crafting', 'prepping'];
+  private darkModeTexts:string[] = ['crying','contemplating','ruminating'];
+  private texts: string[] = this.lightModeTexts;
   private currentIndex: number = 0;
   private lastTouchY: number = 0;
   private accumulatedDistance: number = 0;
   private distanceThreshold: number = 30; // Change text every 30px of scroll
   themeText = 'switch dark';
+  audioSource: string = '../assets/audio/bg-audio.mp3';
+  isPlaying: boolean = true;
+fadeDuration: number = 500;
+
 
 
   // Create a Subject for debouncing
   private touchMoveSubject = new Subject<void>();
   private wheelSubject = new Subject<void>();
 
+  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
   constructor(private themeService: ThemeService) {
     // Apply debounce for touch events (touch devices)
     this.touchMoveSubject.pipe(
@@ -44,17 +51,75 @@ export class AppComponent {
 
   }
 
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
+
+  updateTextsBasedOnTheme() {
+    // Check the current theme (this is an example; replace with your actual theme detection)
+    const isDarkMode = document.body.classList.contains('dark'); // Adjust as needed
+
+    this.texts = isDarkMode ? this.darkModeTexts : this.lightModeTexts;
+    this.displayedText = this.texts[this.currentIndex]; // Update displayed text to match the new texts array
   }
 
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+    this.updateTextsBasedOnTheme();
+
+  }
+
+   togglePlayPause(): void {
+    if (this.isPlaying) {
+      this.fadeOutAudio();
+    } else {
+      this.fadeInAudio();
+    }
+  }
 
   private updateThemeText(theme: string): void {
     this.themeText = theme === 'dark' ? 'switch normal' : 'switch dark';
   }
 
+  fadeInAudio(): void {
+    const audio = this.audioPlayer.nativeElement;
+    let volume = 0;
+    const fadeInStep = 1 / (this.fadeDuration / 50); // Incremental step per 50ms
+
+    audio.volume = 0; // Start with zero volume
+    audio.play().then(() => {
+      this.isPlaying = true;
+
+      const fadeInInterval = setInterval(() => {
+        if (volume < 1) {
+          volume = Math.min(1, volume + fadeInStep);
+          audio.volume = volume;
+        } else {
+          clearInterval(fadeInInterval);
+        }
+      }, 50);
+    }).catch(error => {
+      console.error('Error playing audio:', error);
+    });
+  }
+
+  fadeOutAudio(): void {
+    const audio = this.audioPlayer.nativeElement;
+    let volume = audio.volume;
+    const fadeOutStep = volume / (this.fadeDuration / 50);
+
+    const fadeOutInterval = setInterval(() => {
+      if (volume > 0) {
+        volume = Math.max(0, volume - fadeOutStep);
+        audio.volume = volume;
+      } else {
+        clearInterval(fadeOutInterval);
+        audio.pause();
+        this.isPlaying = false;
+      }
+    }, 50);
+  }
+
     ngOnInit() {
     // Add global event listeners
+    this.updateTextsBasedOnTheme();
     document.addEventListener('wheel', this.onWheel.bind(this));
     document.addEventListener('touchstart', this.onTouchStart.bind(this));
     document.addEventListener('touchmove', this.onTouchMove.bind(this));

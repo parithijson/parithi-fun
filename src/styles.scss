@@ -4,6 +4,22 @@ body {
   --text-color: #ffffff;
   background-image: url('./assets/images/noise-light.png');
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter';
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
 
 body.light {
   background-color: var(--background-color);
@@ -17,13 +33,15 @@ body.dark {
   background-color: var(--background-color);
   color: var(--text-color);
 }
-.theme-toggle-btn{
+.theme-toggle-btn,.music-toggle-btn{
+    width:fit-content ;
     font-size: 24px !important;
     font-weight: 200 !important;
     text-decoration: underline !important;
     cursor: pointer;
 }
-.theme-toggle-btn:hover{
+
+.theme-toggle-btn:hover,.music-toggle-btn:hover{
     background-color: #fa3c3c !important;
     background-image: url('./assets/images/noise-light.png') !important;
 }
