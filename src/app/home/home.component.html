@@ -1,0 +1,22 @@
+<div class="wrapper">
+
+  <div class="main">
+    <nav class="navbar">
+      <p class="theme-toggle-btn" (click)="toggleTheme()">{{ themeText }}</p>
+    </nav>
+    <h1>Parithi Mohammed Akthar S</h1>
+    <p class="letters">{{displayedText}}</p>
+
+
+
+
+  </div>
+  <footer>
+    <p (click)="togglePlayPause()" class="music-toggle-btn" style="cursor: pointer;"
+      [ngClass]="isPlaying ? 'pause' : 'play'">music</p>
+
+  </footer>
+</div>
+
+
+<audio #audioPlayer [src]="audioSource" preload="auto" autoplay></audio>

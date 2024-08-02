@@ -1,22 +1,7 @@
-<div class="wrapper">
+<ng-container *ngIf="!isHomeVisible">
+  <app-opener (buttonClicked)="showHome()"></app-opener>
+</ng-container>
 
-  <div class="main">
-    <nav class="navbar">
-      <p class="theme-toggle-btn" (click)="toggleTheme()">{{ themeText }}</p>
-    </nav>
-    <h1>Parithi Mohammed Akthar S</h1>
-    <p class="letters">{{displayedText}}</p>
-
-
-
-
-  </div>
-  <footer>
-    <p (click)="togglePlayPause()" class="music-toggle-btn" style="cursor: pointer;"
-      [ngClass]="isPlaying ? 'pause' : 'play'">music</p>
-
-  </footer>
-</div>
-
-
-<audio #audioPlayer [src]="audioSource" autoplay loop></audio>
+<ng-container *ngIf="isHomeVisible">
+  <app-home></app-home>
+</ng-container>
